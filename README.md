@@ -1,6 +1,6 @@
-# comment-component
 
-> this is bruce's component test project by vue.js.
+# commentModule
+> this is made by vue.js
 
 ## Build Setup
 
