@@ -28,7 +28,7 @@
                 </div>
                 <div class="writerNote">
                     <div class="formGroupBox">
-                        <textarea class="noteText" type="text" placeholder="댓글 달기" v-model="newComment.commentText" />
+                        <textarea class="noteText" type="text" placeholder="댓글 달기" v-model="newComment.commentText" ></textarea>
                     </div>
                     <!-- {{menuText.writeBox.commentInputPlaceholderText}} -->
 
@@ -52,7 +52,7 @@
         <!-- [[댓글 목록 상자]] -->
         <div class="listBox" v-if="commentList.length > 0">
 
-            <ul class="commentList" v-for="(commentItem, index) in commentList">
+            <ul class="commentList" v-for="(commentItem, cIdx) in commentList">
 
                 <li>
                     <!-- [[댓글 헤더]] -->
@@ -68,19 +68,19 @@
                                 </div>
                                 <div class="btnRightGroup" v-if="isOwner(commentItem.userId)">
                                   <div v-show="commentItem.isEditing">
-                                    <span><a href="#" class="modifyBtn" @click.prevent.stop="goModifyComment(commentItem)">수정</a></span>
-                                    <span><a href="#" class="deleteBtn" @click.prevent.stop="deleteComment(commentItem, index)">삭제</a></span>
+                                    <span><a href="#" class="modifyBtn" @click.prevent.stop="goModifyComment(cIdx)">수정</a></span>
+                                    <span><a href="#" class="deleteBtn" @click.prevent.stop="deleteComment(cIdx)">삭제</a></span>
                                     <span>|</span>
-                                    <span><a href="#" class="replyBtn" @click.prevent.stop="replyComment(commentItem)">답글</a></span>
+                                    <span><a href="#" class="replyBtn" @click.prevent.stop="replyComment(cIdx)">답글</a></span>
                                   </div>
                                   <div v-show="!(commentItem.isEditing)">
-                                    <span><a href="#" class="modifyBtn" @click.prevent.stop="cancleModifyReply(replyItem, index)">취소</a></span>
-                                    <span><a href="#" class="modifyBtn" @click.prevent.stop="updateComment(commentItem, index)">저장</a></span>
+                                    <span><a href="#" class="modifyBtn" @click.prevent.stop="cancelModifyComment(cIdx)">취소</a></span>
+                                    <span><a href="#" class="modifyBtn" @click.prevent.stop="updateComment(cIdx)">저장</a></span>
                                   </div>
                                 </div>
                                 <div class="btnRightGroup" v-else>
-                                  <span><a href="#" class="likeBtn" @click.prevent.stop="likeComment(commentItem)">좋아요</a></span>
-                                  <span><a :href="'#reply-write-'+index" class="replyBtn" @click.stop="replyComment(commentItem, index)">답글</a></span>
+                                  <span><a href="#" class="likeBtn" @click.prevent.stop="likeComment(cIdx)">좋아요</a></span>
+                                  <span><a href="#" class="replyBtn" @click.prevent.stop="replyComment(cIdx)">답글</a></span>
                                 </div>
 
                             </div>                    
@@ -91,9 +91,9 @@
                     <div class="commentBody">
                         <div class="commentText">
                             <!-- TextArea로 변경 필요 -->
-                            <textarea :id="'comment-'+index" class="" :readonly="commentItem.isEditing" v-model="commentItem.commentText"></textarea>
+                            <textarea class="" :readonly="commentItem.isEditing" v-model="commentItem.commentText"></textarea>
                             <template v-if="commentItem.attachList.length > 0">
-                                <div v-for="(attachItem, index) in commentItem.attachList">
+                                <div v-for="(attachItem, aIdx) in commentItem.attachList">
                                   <img width="100%" :src="attachItem.attachUrl" >
                                 </div>
                             </template>
@@ -105,15 +105,13 @@
                         <div class="btnGroupArea">
                             <div class="btnLeftGroup">
                                 <span class="date sub-text-2">좋아요 {{commentItem.likeList.length}}</span>
-                                <span class="date sub-text"><a href="#" @click.prevent.stop="toggleRelies(commentItem)">답글 {{commentItem.replyList.length}}개</a></span>
+                                <span class="date sub-text"><a href="#" @click.prevent.stop="toggleRelies(cIdx)">답글 {{commentItem.replyList.length}}개</a></span>
                             </div>
                             <div class="btnRightGroup">
-                                <span><a href="#" class="commentMenuBtn" @click.prevent.stop="contextMenu(commentItem)">메뉴</a></span>
+                                <span><a href="#" class="commentMenuBtn" @click.prevent.stop="contextMenu(cIdx)">메뉴</a></span>
                             </div>
                         </div>
                     </div>
-
-                
 
 <!-- =================================================================================================================== -->
 <!-- =================================================================================================================== -->
@@ -132,7 +130,7 @@
                                 </div>
                                 <div class="writerNote">
                                     <div class="formGroupBox">
-                                        <textarea :id="'reply-write-'+index" class="noteText" type="text" placeholder="답글 달기" v-model="newReply.replyText" />
+                                        <textarea class="noteText" type="text" placeholder="답글 달기" v-model="newReply.replyText" />
                                     </div>
                                     <!-- {{menuText.writeBox.commentInputPlaceholderText}} -->
 
@@ -142,7 +140,7 @@
                                         </div>
                                         <div class="btnRightGroup">
                                             <!-- <button type="submit" @click="addComment">등록</button> -->
-                                            <span><a href="#" class="addNewBtn" @click.prevent.stop="addReply(commentItem)">{{menuText.writeBox.addNewBtnText}}</a></span>
+                                            <span><a href="#" class="addNewBtn" @click.prevent.stop="addReply(cIdx)">{{menuText.writeBox.addNewBtnText}}</a></span>
                                         </div>
                                     </div>
                                 </div>
@@ -228,7 +226,7 @@
                                         </div>
                                         <div class="btnRightGroup">
                                             <!-- <button type="submit" @click="addComment">등록</button> -->
-                                            <span><a href="#" class="addNewBtn" @click.prevent.stop="addReply(commentItem)">{{menuText.writeBox.addNewBtnText}}</a></span>
+                                            <span><a href="#" class="addNewBtn" @click.prevent.stop="addReply(cIdx)">{{menuText.writeBox.addNewBtnText}}</a></span>
                                         </div>
                                     </div>
                                 </div>
@@ -296,9 +294,8 @@
   </div> <!-- // 바깥 껍데기 div -->
 </template>
 <script>
-// const bruceAlert = function bruceAlert(str) {
-//   alert(str);
-// };
+import moment from 'moment';
+
 export default {
   name: 'Comment',
   data() {
@@ -336,6 +333,7 @@ export default {
         replyText: '',
         attachList: [],
       },
+      capturedCommentItem: {},
       commentList: [
         // {
         //   commnetId: 0,
@@ -401,6 +399,15 @@ export default {
       // bruceAlert('draw Comment Click!!');
       alert('reload Comment Click!!');
     },
+    
+
+
+
+
+
+
+    // [Comment]
+
     // WriteBox -----------------------------
     addComment() {
       // [[this.newComment.commentText 값이 null or undefined or length < 1 이면, 실행 안함]]
@@ -410,12 +417,12 @@ export default {
         userId: this.userInfo.userId, // 사용자 정보(login info) 값으로
         userName: this.userInfo.userName, // 사용자 정보(login info) 값으로
         userProfileImage: this.userInfo.userProfileImage, // 사용자 정보(login info) 값으로
-        calcWrittenDate: '2017년 00월 00일 17:23:48', // DB값으로(처음엔 regDate값, 이후엔 modDate값)
+        calcWrittenDate: moment().format('YYYY-MM-DD hh:mm:ss'), // DB값으로(처음엔 regDate값, 이후엔 modDate값)
         attachList: [],
         likeList: [],
         replyList: [],
-        regDate: '2017-10-23 17:00:30', // DB값으로
-        modDate: '2017-10-23 17:00:30', // DB값으로
+        regDate: moment().format('YYYY-MM-DD hh:mm:ss'), // DB값으로 '2017-10-23 17:00:30'
+        modDate: moment().format('YYYY-MM-DD hh:mm:ss'), // DB값으로
         isEditing: true,
         isEditingReply: false,
         isShowReplies: false,
@@ -436,81 +443,49 @@ export default {
       // 입력값 초기화
       this.newComment.commentText = '';
       this.newComment.attachList = [];
-
-      return false;
     },
     addAttachComment() {
       alert('addAttach Click!!\n 댓글 첨부파일 등록');
       // this.checked = !this.checked;
     },
-    addReply(cmtTarget) {
-      // [[this.newReply.replyText 값이 null or undefined or length < 1 이면, 실행 안함]]
-      const newOne = {
-        replyId: 0, // DB값으로
-        replyText: this.newReply.replyText,
-        userId: this.userInfo.userId, // 사용자 정보(login info) 값으로
-        userName: this.userInfo.userName, // 사용자 정보(login info) 값으로
-        userProfileImage: this.userInfo.userProfileImage, // 사용자 정보(login info) 값으로
-        calcWrittenDate: '2017년 00월 00일 17:23:48', // DB값으로(처음엔 regDate값, 이후엔 modDate값)
-        attachList: [],
-        likeList: [],
-        regDate: '2017-10-23 17:00:30', // DB값으로
-        modDate: '2017-10-23 17:00:30', // DB값으로
-        isEditing: true,
-      };
-
-      // [TODO] 서버 호출(값 저장) 후 데이터 정상 저장 시,
-      // hash값을 비교 하여 새로운 반영 안된 데이터가 있는지 확인
-      // 1. 만약 갱신되지 않은 새로운 데이터가 없다면, "현재 리스트에 입력 값 추가"
-      // 2. 만약 갱신되지 않은 새로운 데이터가 존재한다면, "새로고침 요청"
-
-      // 현재 리스트에 입력 값 추가
-      if(this.commentModuleConfig.orderType === 'desc') {
-        cmtTarget.replyList.unshift(newOne);
-      } else if(this.commentModuleConfig.orderType === 'asc') {
-        cmtTarget.replyList.push(newOne);
-      }
-      
-
-      // 입력값 초기화
-      this.newReply.replyText = '';
-      this.newReply.attachList = [];
-
-      return false;
-    },
-    addAttachReply() {
-      alert('addAttach Click!!\n 답글 첨부파일 등록');
-      // this.checked = !this.checked;
-    },
-
+    
     // ListBox
-
     // CommentList ------------------------------
-    goModifyComment(cmtTarget) {
-      const target = cmtTarget;
-      target.isEditing = false;
+    goModifyComment(idx) {
+      this.capturedCommentItem[idx] = Object.assign({}, this.commentList[idx]);
+      
+      this.commentList[idx].isEditing = false;
     },
-    updateComment(cmtTarget, index) {
-      const target = cmtTarget;
-      target.isEditing = true;
+    cancelModifyComment(idx) {
+      const targetItem = this.capturedCommentItem[idx];
+      this.commentList.splice(idx, 1, targetItem);
+      delete this.capturedCommentItem[idx];
+
+      this.commentList[idx].isEditing = true;
+    } ,
+    updateComment(idx) {
+      delete this.capturedCommentItem[idx];
+      
+      this.commentList[idx].isEditing = true;
 
       // [[TODO]] Ajax 호출로 서버에 데이터 갱신 후 목록에서 수정 처리
       // 단, 서버로 호출할 경우, index 말고 commentId 값으로 변경한다.
-      target.commentText = document.getElementById('comment-'+index).value;
+
+      // const targetItem = this.commentList[idx];
+      // targetItem.commentText = document.getElementById('comment-'+idx).value; 
+      // this.commentList.splice(idx, 1, targetItem);
     },
-    deleteComment(cmtTarget, index) {
-      const target = cmtTarget;
+    deleteComment(idx) {
 
       // [[TODO]] Ajax 호출로 서버에 데이터 삭제 후 목록에서 삭제 처리
-      this.commentList.splice(index, 1);
+      this.commentList.splice(idx, 1);
     },
-    likeComment(cmtTarget) {
-      const target = cmtTarget;
-      
+    likeComment(idx) {      
+
       let isLiekedComment = false;
       let index = -1;
-      for (let key in target.likeList) {
-        if (target.likeList[key].userId === this.userInfo.userId) {
+      for (let key in this.commentList[idx].likeList) {
+        if (this.commentList[idx].likeList[key].userId === this.userInfo.userId) {
            isLiekedComment = true;
            index = key;
            break;
@@ -525,36 +500,82 @@ export default {
         };
 
         // [[TODO]] Ajax 호출로 서버에 데이터 갱신 후 목록에서 수정 처리
-        target.likeList.push(newOne);
+        this.commentList[idx].likeList.push(newOne);
 
       } else {
         
         // [[TODO]] Ajax 호출로 서버에 데이터 갱신 후 목록에서 수정 처리
         if(index > -1){
-          target.likeList.splice(index, 1);
+          this.commentList[idx].likeList.splice(index, 1);
         }
       }
       
     },
-    replyComment(cmtTarget) {
-      const target = cmtTarget;
-      target.isEditingReply = !(target.isEditingReply);
-      // 답글을 달기 위한 편집 창을 열면 답글 목록을 보여준다.
-      if(target.isEditingReply === true){
-        target.isShowReplies = true;
+    replyComment(idx) {
+
+      if(this.commentList[idx].isShowReplies) {
+        this.commentList[idx].isEditingReply = !this.commentList[idx].isEditingReply;
+      } else {
+        this.commentList[idx].isEditingReply = true;
+        this.commentList[idx].isShowReplies = true;
       }
       
     },
-    contextMenu(cmtTarget, index) {
-      const target = cmtTarget;
-      alert(JSON.stringify(target));
-      alert('contextMenu Click!!\n 댓글 신고 및 SNS 공유');
+    contextMenu(idx) {
+      const targetItem = this.commentList[idx];
+      alert(JSON.stringify(targetItem));
     },
-    toggleRelies(cmtTarget) {
-      const target = cmtTarget;
-      target.isShowReplies = !(target.isShowReplies);
+    toggleRelies(idx) {
+      this.commentList[idx].isShowReplies = !(this.commentList[idx].isShowReplies);
     },
 
+
+
+
+
+
+    // [Reply]
+
+    // WriteBox -----------------------------
+    addReply(idx) {
+      // [[this.newReply.replyText 값이 null or undefined or length < 1 이면, 실행 안함]]
+      const newOne = {
+        replyId: 0, // DB값으로
+        replyText: this.newReply.replyText,
+        userId: this.userInfo.userId, // 사용자 정보(login info) 값으로
+        userName: this.userInfo.userName, // 사용자 정보(login info) 값으로
+        userProfileImage: this.userInfo.userProfileImage, // 사용자 정보(login info) 값으로
+        calcWrittenDate: moment().format('YYYY-MM-DD hh:mm:ss'), // DB값으로(처음엔 regDate값, 이후엔 modDate값)
+        attachList: [],
+        likeList: [],
+        regDate: moment().format('YYYY-MM-DD hh:mm:ss'), // DB값으로
+        modDate: moment().format('YYYY-MM-DD hh:mm:ss'), // DB값으로
+        isEditing: true,
+      };
+
+      // [TODO] 서버 호출(값 저장) 후 데이터 정상 저장 시,
+      // hash값을 비교 하여 새로운 반영 안된 데이터가 있는지 확인
+      // 1. 만약 갱신되지 않은 새로운 데이터가 없다면, "현재 리스트에 입력 값 추가"
+      // 2. 만약 갱신되지 않은 새로운 데이터가 존재한다면, "새로고침 요청"
+
+      // 현재 리스트에 입력 값 추가
+      if(this.commentModuleConfig.orderType === 'desc') {
+        this.commentList[idx].replyList.unshift(newOne);
+      } else if(this.commentModuleConfig.orderType === 'asc') {
+        this.commentList[idx].replyList.push(newOne);
+      }
+      
+
+      // 입력값 초기화
+      this.newReply.replyText = '';
+      this.newReply.attachList = [];
+    },
+    addAttachReply() {
+      alert('addAttach Click!!\n 답글 첨부파일 등록');
+      // this.checked = !this.checked;
+    },
+    
+    // ListBox
     // ReplyList ------------------------------
     goModifyReply(rplTarget) {
       const target = rplTarget;
